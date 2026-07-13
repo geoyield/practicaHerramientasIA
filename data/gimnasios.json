@@ -1,0 +1,30 @@
+[
+  {
+    "id": "gym-1",
+    "name": "Ponte Cachas Gimnasio 1",
+    "source_name": "1",
+    "address": "call A 1, Madrid",
+    "city": "Madrid"
+  },
+  {
+    "id": "gym-2",
+    "name": "Ponte Cachas Gimnasio 2",
+    "source_name": "2",
+    "address": "call B 1, Madrid",
+    "city": "Madrid"
+  },
+  {
+    "id": "gym-3",
+    "name": "Ponte Cachas Gimnasio 3",
+    "source_name": "3",
+    "address": "call A 1, Toledo",
+    "city": "Toledo"
+  },
+  {
+    "id": "gym-4",
+    "name": "Ponte Cachas Gimnasio 4",
+    "source_name": "4",
+    "address": "call A 1, Torrejón",
+    "city": "Torrejón"
+  }
+]

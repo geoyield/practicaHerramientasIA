@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Portal demo de Ponte Cachas para reservar clases y sesiones.">
+  <title>Ponte Cachas · Portal fitness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="Ponte Cachas, inicio">
+      <span class="brand-mark" aria-hidden="true">▮▮▮</span>
+      <span>Ponte Cachas</span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">☰</button>
+    <nav class="topnav" id="topNav" aria-label="Navegación principal">
+      <a class="active" href="#inicio">Inicio</a>
+      <a href="#clases">Clases</a>
+      <a href="#gimnasios">Gimnasios</a>
+      <a href="#entrenadores">Entrenadores</a>
+      <a href="#dietistas">Dietistas</a>
+      <a href="#reservas">Reservas</a>
+      <a href="#cuenta">Mi cuenta</a>
+      <button class="profile-button" aria-label="Abrir perfil">G</button>
+    </nav>
+  </header>
+
+  <main class="app-shell" id="inicio">
+    <aside class="sidebar" aria-label="Panel lateral">
+      <section class="panel gym-panel" id="gimnasios">
+        <span class="eyebrow neutral">Gimnasio seleccionado</span>
+        <label class="sr-only" for="selectedGym">Selecciona gimnasio</label>
+        <select id="selectedGym" class="select-clean">
+          {% for gym in gyms %}
+          <option value="{{ gym.id }}" data-address="{{ gym.address }}">{{ gym.name }}</option>
+          {% endfor %}
+        </select>
+        <p class="muted-line" id="selectedGymAddress">⌖ {{ gyms[0].address }}</p>
+        <button class="text-button" type="button" id="changeGym">Cambiar gimnasio</button>
+      </section>
+
+      <section class="panel" id="reservas">
+        <div class="panel-title"><span>▣</span><h2>Próximas reservas</h2></div>
+        <div class="reservation-list">
+          {% for item in upcoming %}
+          <article class="reservation-item">
+            <div class="date-badge"><small>{{ item.month }}</small><strong>{{ item.day }}</strong></div>
+            <div><strong>{{ item.title }}</strong><span>{{ item.time }}</span><small>{{ item.gym }}</small></div>
+            <span class="chevron">›</span>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="panel quick-panel">
+        <h2>Accesos rápidos</h2>
+        <a href="#clases"><span>▣</span> Reservar clase</a>
+        <button type="button" data-open-appointment="personal"><span>✦</span> Reservar sesión</button>
+        <a href="#cuenta"><span>✓</span> Mi plan</a>
+        <a href="#cuenta"><span>▤</span> Pagos y suscripciones</a>
+      </section>
+
+      <section class="invite-card">
+        <div>
+          <h2>Invita a un amigo</h2>
+          <p>Entrenad juntos y conseguid descuentos exclusivos.</p>
+          <button class="button button-light" type="button" id="inviteButton">Invitar ahora</button>
+        </div>
+        <span class="gift" aria-hidden="true">🎁</span>
+      </section>
+    </aside>
+
+    <div class="content">
+      <section class="hero panel-soft">
+        <div class="hero-copy">
+          <span class="eyebrow">Bienvenido a Ponte Cachas</span>
+          <h1>Entrena a tu manera</h1>
+          <p>Reserva clases, sesiones con entrenadores y consultas con dietistas de forma fácil y rápida en todos nuestros gimnasios.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#clases">Inscribirme a clases <span>›</span></a>
+            <button class="button button-outline" type="button" data-open-appointment="personal">▣ Reservar sesión</button>
+          </div>
+        </div>
+        <div class="video-wrap">
+          <video controls autoplay muted loop playsinline poster="{{ url_for('static', path='assets/video/banner_poster.png') }}">
+            <source src="{{ url_for('static', path='assets/video/banner_demo.mp4') }}" type="video/mp4">
+            Tu navegador no permite reproducir vídeo HTML5.
+          </video>
+          <span class="video-label">Tu entrenamiento. Tu ritmo.</span>
+        </div>
+      </section>
+
+      <div class="dashboard-grid">
+        <section class="section-card classes-section" id="clases">
+          <div class="section-heading">
+            <div><span class="heading-icon">▣</span><h2>Inscríbete a clases</h2></div>
+            <a href="#clases">Ver todas las clases</a>
+          </div>
+          <div class="filters" aria-label="Filtros de clases">
+            <select id="gymFilter">
+              <option value="all">Todos los gimnasios</option>
+              {% for gym in gyms %}<option value="{{ gym.id }}">{{ gym.name }}</option>{% endfor %}
+            </select>
+            <select id="activityFilter"><option value="all">Todas las actividades</option>{% for item in classes %}<option value="{{ item.name }}">{{ item.name }}</option>{% endfor %}</select>
+            <button type="button" class="date-filter">▣ Hoy, {{ today_label }}</button>
+          </div>
+          <div class="class-grid" id="classGrid">
+            {% for item in classes %}
+            <article class="class-card" data-gym="{{ item.gym_id }}" data-activity="{{ item.name }}" data-class-id="{{ item.id }}">
+              <img src="{{ url_for('static', path='assets/classes/' + item.image) }}" alt="Clase de {{ item.name }}">
+              <div class="class-overlay"></div>
+              <div class="class-content">
+                <span class="class-icon {{ item.accent }}">{{ item.icon }}</span>
+                <h3>{{ item.name }}</h3>
+                <strong>{{ item.time }}</strong>
+                <small title="{{ item.gym_address }}">{{ item.gym }}</small>
+                <button class="spots enroll-trigger" type="button" data-class-id="{{ item.id }}" data-class-name="{{ item.name }}" data-class-time="{{ item.time }}" data-class-gym="{{ item.gym }}" data-class-address="{{ item.gym_address }}">
+                  <span data-spots-for="{{ item.id }}">{{ item.spots }}</span> plazas disponibles
+                </button>
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+          <div class="empty-state" id="emptyClasses" hidden>No hay clases con esos filtros.</div>
+        </section>
+
+        <section class="section-card booking-section" id="dietistas">
+          <div class="section-heading">
+            <div><span class="heading-icon">♧</span><h2>Reserva con especialistas</h2></div>
+          </div>
+          <article class="service-card personal-card">
+            <div>
+              <span class="service-kicker">Entrenamiento personal</span>
+              <p>Alcanza tus objetivos con entrenadores certificados.</p>
+            </div>
+            <div class="mini-avatars">
+              {% for trainer in trainers[:3] %}<img src="{{ url_for('static', path='assets/trainers/' + trainer.image) }}" alt="{{ trainer.name }}">{% endfor %}<span>+12</span>
+            </div>
+            <button class="button button-primary full" type="button" data-open-appointment="personal">▣ Reservar sesión</button>
+          </article>
+          <article class="service-card diet-card">
+            <div>
+              <span class="service-kicker green">Consulta con dietistas</span>
+              <p>Planes nutricionales personalizados para ti.</p>
+            </div>
+            <div class="mini-avatars">
+              <img src="{{ url_for('static', path='assets/trainers/andrea.jpg') }}" alt="Andrea Salazar"><span>+8</span>
+            </div>
+            <button class="button button-green full" type="button" data-open-appointment="diet">▣ Reservar consulta</button>
+          </article>
+        </section>
+      </div>
+
+      <section class="section-card trainers-section" id="entrenadores">
+        <div class="trainers-title">
+          <span class="chat-symbol">◌</span>
+          <div><h2>Habla con nuestros entrenadores</h2><p>Haz clic en la foto de un profesional para iniciar una conversación.</p></div>
+        </div>
+        <div class="trainer-grid">
+          {% for trainer in trainers %}
+          <button class="trainer-card" type="button"
+                  data-trainer-id="{{ trainer.id }}"
+                  data-trainer-name="{{ trainer.name }}"
+                  data-trainer-role="{{ trainer.role }}"
+                  data-trainer-specialty="{{ trainer.specialty }}"
+                  data-trainer-image="{{ url_for('static', path='assets/trainers/' + trainer.image) }}"
+                  data-trainer-greeting="{{ trainer.greeting }}">
+            <span class="online-dot" aria-label="Disponible"></span>
+            <img src="{{ url_for('static', path='assets/trainers/' + trainer.image) }}" alt="Foto de {{ trainer.name }}">
+            <strong>{{ trainer.name }}</strong>
+            <span>{{ trainer.specialty }}</span>
+          </button>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="account-placeholder section-card" id="cuenta">
+        <div><span class="heading-icon">◎</span><h2>Mi cuenta</h2></div>
+        <p>Área demostrativa para el plan, pagos, preferencias y datos personales.</p>
+      </section>
+    </div>
+  </main>
+
+  <aside class="chat-widget" id="chatWidget" aria-live="polite" hidden>
+    <header class="chat-header">
+      <img id="chatAvatar" alt="Avatar del profesional">
+      <div><strong id="chatName"></strong><span id="chatRole"></span></div>
+      <span class="chat-online"></span>
+      <button type="button" class="icon-button" id="minimizeChat" aria-label="Minimizar chat">−</button>
+      <button type="button" class="icon-button" id="closeChat" aria-label="Cerrar chat">×</button>
+    </header>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="quick-replies" id="quickReplies">
+      <button type="button">Quiero mejorar mi forma</button>
+      <button type="button">Consultar horarios</button>
+      <button type="button">Reservar una sesión</button>
+    </div>
+    <form class="chat-form" id="chatForm">
+      <input id="chatInput" type="text" maxlength="600" placeholder="Escribe tu mensaje..." autocomplete="off" required>
+      <button type="submit" aria-label="Enviar mensaje">➤</button>
+    </form>
+  </aside>
+
+  <dialog class="modal" id="enrollModal">
+    <form method="dialog" class="modal-card" id="enrollForm">
+      <button class="modal-close" type="button" data-close-modal="enrollModal">×</button>
+      <span class="eyebrow">Inscripción a clase</span>
+      <h2 id="enrollTitle">Reserva tu plaza</h2>
+      <p id="enrollMeta" class="modal-meta"></p>
+      <input type="hidden" id="enrollClassId">
+      <label>Nombre completo<input id="enrollName" type="text" minlength="2" maxlength="80" placeholder="Tu nombre" required></label>
+      <label>Correo electrónico<input id="enrollEmail" type="email" placeholder="tu@email.com" required></label>
+      <button class="button button-primary full" type="submit">Confirmar inscripción</button>
+      <p class="form-status" id="enrollStatus"></p>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="appointmentModal">
+    <form method="dialog" class="modal-card" id="appointmentForm">
+      <button class="modal-close" type="button" data-close-modal="appointmentModal">×</button>
+      <span class="eyebrow">Nueva reserva</span>
+      <h2 id="appointmentTitle">Reservar sesión</h2>
+      <label>Profesional
+        <select id="professionalId" required>
+          {% for trainer in trainers %}<option value="{{ trainer.id }}" data-role="{{ trainer.role }}">{{ trainer.name }} · {{ trainer.specialty }}</option>{% endfor %}
+        </select>
+      </label>
+      <label>Gimnasio
+        <select id="appointmentGym" required>
+          {% for gym in gyms %}<option value="{{ gym.id }}">{{ gym.name }} · {{ gym.address }}</option>{% endfor %}
+        </select>
+      </label>
+      <label>Nombre completo<input id="appointmentName" type="text" minlength="2" maxlength="120" placeholder="Tu nombre" required></label>
+      <label>Correo electrónico<input id="appointmentEmail" type="email" placeholder="tu@email.com" required></label>
+      <div class="form-row">
+        <label>Fecha<input id="appointmentDate" type="date" required></label>
+        <label>Hora<select id="appointmentTime"><option>09:00</option><option>11:30</option><option>16:00</option><option>18:30</option></select></label>
+      </div>
+      <button class="button button-primary full" type="submit">Confirmar reserva</button>
+      <p class="form-status" id="appointmentStatus"></p>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="{{ url_for('static', path='js/app.js') }}" defer></script>
+</body>
+</html>
