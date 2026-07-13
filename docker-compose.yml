@@ -5,8 +5,10 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-ponte_cachas}
       POSTGRES_USER: ${POSTGRES_USER:-ponte_cachas}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ponte_cachas}
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
+    #ports:
+    #  - "5432:5432"
     volumes:
       - ponte_cachas_pgdata:/var/lib/postgresql/data
     networks:
