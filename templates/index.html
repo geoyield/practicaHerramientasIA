@@ -173,7 +173,7 @@
                   data-trainer-image="{{ url_for('static', path='assets/trainers/' + trainer.image) }}"
                   data-trainer-greeting="{{ trainer.greeting }}">
             <span class="online-dot" aria-label="Disponible"></span>
-            <video autoplay loop muted playsinline aria-label="Vídeo de {{ trainer.name }}">
+            <video controls loop playsinline aria-label="Vídeo de {{ trainer.name }}">
               <source src="{{ url_for('static', path='assets/video/' + trainer.video) }}" type="video/mp4">
             </video>
             <strong>{{ trainer.name }}</strong>
