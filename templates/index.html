@@ -173,9 +173,11 @@
                   data-trainer-image="{{ url_for('static', path='assets/trainers/' + trainer.image) }}"
                   data-trainer-greeting="{{ trainer.greeting }}">
             <span class="online-dot" aria-label="Disponible"></span>
-            <video controls loop playsinline aria-label="Vídeo de {{ trainer.name }}">
-              <source src="{{ url_for('static', path='assets/video/' + trainer.video) }}" type="video/mp4">
-            </video>
+            <span class="trainer-video">
+              <video controls loop playsinline aria-label="Vídeo de {{ trainer.name }}">
+                <source src="{{ url_for('static', path='assets/video/' + trainer.video) }}" type="video/mp4">
+              </video>
+            </span>
             <strong>{{ trainer.name }}</strong>
             <span>{{ trainer.specialty }}</span>
           </button>
