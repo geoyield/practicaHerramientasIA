@@ -29,8 +29,8 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 TRAINERS: list[dict[str, str]] = [
     {
-        "id": "victor",
-        "name": "Víctor Bernal",
+        "id": "Marvin",
+        "name": "Marvin Bernal",
         "role": "Entrenador",
         "specialty": "Spinning y Funcional",
         "image": "victor.jpg",
