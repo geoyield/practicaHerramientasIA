@@ -34,6 +34,7 @@ TRAINERS: list[dict[str, str]] = [
         "role": "Entrenador",
         "specialty": "Spinning y Funcional",
         "image": "victor.jpg",
+        "video": "marvin.mp4",
         "status": "Disponible",
         "greeting": "¡Hola! Soy Víctor. Puedo ayudarte a ganar fuerza con una progresión segura y realista.",
     },
@@ -43,6 +44,7 @@ TRAINERS: list[dict[str, str]] = [
         "role": "Entrenador",
         "specialty": "Gimnasio",
         "image": "manuel.jpg",
+        "video": "manuel.mp4",
         "status": "Disponible",
         "greeting": "¡Hola! Soy Manuel. Cuéntame tu objetivo y diseñamos un plan sostenible para alcanzarlo.",
     },
@@ -52,6 +54,7 @@ TRAINERS: list[dict[str, str]] = [
         "role": "Entrenador",
         "specialty": "Piscina y HITT",
         "image": "enmanuel.jpg",
+        "video": "enmanuel.mp4",
         "status": "Disponible",
         "greeting": "¡Hola! Soy Enmanuel. Puedo ayudarte con piscina, técnica y HITT.",
     },
@@ -61,6 +64,7 @@ TRAINERS: list[dict[str, str]] = [
         "role": "Entrenador",
         "specialty": "Crossfit y Halterofilia",
         "image": "claudi.jpg",
+        "video": "claudi.mp4",
         "status": "Disponible",
         "greeting": "¡Hola! Soy Claudi. Te voy a ayudar con crossfit y halterofilia.",
     },
@@ -159,10 +163,10 @@ def build_chat_reply(trainer: dict[str, str], message: str) -> str:
     if any(word in content for word in ("horario", "hora", "disponible", "reserva")):
         return "Tengo huecos de demostración por la mañana y por la tarde. Pulsa “Reservar sesión” para elegir centro, fecha y hora."
     replies = {
-        "carlos": "Para mejorar fuerza empezaría revisando tu experiencia, técnica y número de días disponibles. ¿Cuántos días entrenas ahora?",
-        "laura": "Para perder grasa sin perder energía conviene combinar fuerza, pasos diarios y una pauta sostenible. ¿Qué te cuesta más mantener?",
-        "miguel": "Podemos trabajar movilidad con una rutina breve y específica. ¿Notas más limitación en cadera, hombros o espalda?",
-        "andrea": "Para orientarte bien necesito conocer tu objetivo, horarios, preferencias y posibles restricciones alimentarias. ¿Qué te gustaría mejorar primero?",
+        "claudi": "Para mejorar fuerza empezaría revisando tu experiencia, técnica y número de días disponibles. ¿Cuántos días entrenas ahora?",
+        "enmanuel": "Para perder grasa sin perder energía conviene combinar fuerza, pasos diarios y una pauta sostenible. ¿Qué te cuesta más mantener?",
+        "manuel": "Podemos trabajar movilidad con una rutina breve y específica. ¿Notas más limitación en cadera, hombros o espalda?",
+        "victor": "Para orientarte bien necesito conocer tu objetivo, horarios, preferencias y posibles restricciones alimentarias. ¿Qué te gustaría mejorar primero?",
     }
     return replies[trainer["id"]]
 
