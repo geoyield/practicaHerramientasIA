@@ -186,7 +186,17 @@ function openChat(card) {
   $("#chatWidget").classList.remove("minimized");
   $("#chatInput").focus();
 }
-$$(".trainer-card").forEach(card => card.addEventListener("click", () => openChat(card)));
+$$(".trainer-card").forEach(card => {
+  card.addEventListener("click", event => {
+    if (event.target.closest("video")) return;
+    openChat(card);
+  });
+  card.addEventListener("keydown", event => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    openChat(card);
+  });
+});
 
 $("#closeChat").addEventListener("click", () => $("#chatWidget").hidden = true);
 $("#minimizeChat").addEventListener("click", () => {

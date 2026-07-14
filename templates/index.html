@@ -165,7 +165,7 @@
         </div>
         <div class="trainer-grid">
           {% for trainer in trainers %}
-          <button class="trainer-card" type="button"
+          <article class="trainer-card" role="button" tabindex="0"
                   data-trainer-id="{{ trainer.id }}"
                   data-trainer-name="{{ trainer.name }}"
                   data-trainer-role="{{ trainer.role }}"
@@ -180,7 +180,7 @@
             </span>
             <strong>{{ trainer.name }}</strong>
             <span>{{ trainer.specialty }}</span>
-          </button>
+          </article>
           {% endfor %}
         </div>
       </section>
