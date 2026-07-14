@@ -4,255 +4,568 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Portal demo de Ponte Cachas para reservar clases y sesiones.">
-  <title>Ponte Cachas · Portal fitness</title>
+  <title>Ponte Cachas · Tu fuerza, sin límites</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}">
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="#inicio" aria-label="Ponte Cachas, inicio">
-      <img
-        src="/static/assets/ponte-cachas-logo.svg"
-        alt="Ponte Cachas"
-        style="display:block; width:180px; height:42px; min-width:180px; min-height:42px;"
-      >
+
+<nav class="nav" id="siteNav">
+  <div class="wrap nav-row">
+    <a class="brand-mark" href="#inicio" aria-label="Ponte Cachas, inicio">
+      <img src="{{ url_for('static', path='assets/ponte-cachas-logo.svg') }}" alt="Ponte Cachas">
     </a>
-    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">☰</button>
-    <nav class="topnav" id="topNav" aria-label="Navegación principal">
-      <a class="active" href="#inicio">Inicio</a>
+
+    <button class="nav-toggle" id="menuToggle" aria-label="Abrir menú">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+
+    <div class="nav-links" id="topNav">
+      <a href="#inicio" class="active">Inicio</a>
       <a href="#clases">Clases</a>
-      <a href="#gimnasios">Gimnasios</a>
       <a href="#entrenadores">Entrenadores</a>
-      <a href="#dietistas">Dietistas</a>
-      <a href="#reservas">Reservas</a>
+      <a href="#planes">Planes</a>
       <a href="#cuenta">Mi cuenta</a>
-      <button class="profile-button" aria-label="Abrir perfil">G</button>
-    </nav>
-  </header>
+      <div class="nav-cta">
+        <a class="btn btn-primary btn-sm" href="#clases">Reservar clase</a>
+      </div>
+    </div>
+  </div>
+</nav>
 
-  <main class="app-shell" id="inicio">
-    <aside class="sidebar" aria-label="Panel lateral">
-      <section class="panel gym-panel" id="gimnasios">
-        <span class="eyebrow neutral">Gimnasio seleccionado</span>
-        <label class="sr-only" for="selectedGym">Selecciona gimnasio</label>
-        <select id="selectedGym" class="select-clean">
-          {% for gym in gyms %}
-          <option value="{{ gym.id }}" data-address="{{ gym.address }}">{{ gym.name }}</option>
-          {% endfor %}
-        </select>
-        <p class="muted-line" id="selectedGymAddress">⌖ {{ gyms[0].address }}</p>
-        <button class="text-button" type="button" id="changeGym">Cambiar gimnasio</button>
-      </section>
+<main id="inicio">
 
-      <section class="panel" id="reservas">
-        <div class="panel-title"><span>▣</span><h2>Próximas reservas</h2></div>
-        <div class="reservation-list">
-          {% for item in upcoming %}
-          <article class="reservation-item">
-            <div class="date-badge"><small>{{ item.month }}</small><strong>{{ item.day }}</strong></div>
-            <div><strong>{{ item.title }}</strong><span>{{ item.time }}</span><small>{{ item.gym }}</small></div>
-            <span class="chevron">›</span>
-          </article>
-          {% endfor %}
-        </div>
-      </section>
-
-      <section class="panel quick-panel">
-        <h2>Accesos rápidos</h2>
-        <a href="#clases"><span>▣</span> Reservar clase</a>
-        <button type="button" data-open-appointment="personal"><span>✦</span> Reservar sesión</button>
-        <a href="#cuenta"><span>✓</span> Mi plan</a>
-        <a href="#cuenta"><span>▤</span> Pagos y suscripciones</a>
-      </section>
-
-      <section class="invite-card">
-        <div>
-          <h2>Invita a un amigo</h2>
-          <p>Entrenad juntos y conseguid descuentos exclusivos.</p>
-          <button class="button button-light" type="button" id="inviteButton">Invitar ahora</button>
-        </div>
-        <span class="gift" aria-hidden="true">🎁</span>
-      </section>
-    </aside>
-
-    <div class="content">
-      <section class="hero panel-soft">
-        <div class="hero-copy">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <div class="hero-eyebrow-row">
           <span class="eyebrow">Bienvenido a Ponte Cachas</span>
-          <h1>Entrena a tu manera</h1>
-          <p>Reserva clases, sesiones con entrenadores y consultas con dietistas de forma fácil y rápida en todos nuestros gimnasios.</p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#clases">Inscribirme a clases <span>›</span></a>
-            <button class="button button-outline" type="button" data-open-appointment="personal">▣ Reservar sesión</button>
-          </div>
         </div>
-        <div class="video-wrap">
-          <video controls autoplay muted loop playsinline poster="{{ url_for('static', path='assets/video/banner_poster.png') }}">
-            <source src="{{ url_for('static', path='assets/video/banner_video_completo.mp4') }}" type="video/mp4">
-            Tu navegador no permite reproducir vídeo HTML5.
-          </video>
-          <span class="video-label">Tu entrenamiento. Tu ritmo.</span>
+        <h1>Tu fuerza<br><span class="gold">sin límites</span></h1>
+        <p>Reserva clases, sesiones con entrenadores y consultas de forma fácil y rápida en todos nuestros gimnasios.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#clases">
+            Inscribirme a clases
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <button class="btn btn-ghost" type="button" data-open-appointment="personal">Reservar sesión</button>
         </div>
-      </section>
+        <div class="hero-proof">
+          <div><strong class="mono">{{ gyms|length }}</strong><span>Sedes disponibles</span></div>
+          <div><strong class="mono">{{ trainers|length }}</strong><span>Entrenadores certificados</span></div>
+          <div><strong class="mono">{{ classes|length }}</strong><span>Clases activas hoy</span></div>
+        </div>
+      </div>
 
-      <div class="dashboard-grid">
-        <section class="section-card classes-section" id="clases">
-          <div class="section-heading">
-            <div><span class="heading-icon">▣</span><h2>Inscríbete a clases</h2></div>
-            <a href="#clases">Ver todas las clases</a>
-          </div>
-          <div class="filters" aria-label="Filtros de clases">
-            <select id="gymFilter">
-              <option value="all">Todos los gimnasios</option>
-              {% for gym in gyms %}<option value="{{ gym.id }}">{{ gym.name }}</option>{% endfor %}
-            </select>
-            <select id="activityFilter"><option value="all">Todas las actividades</option>{% for item in classes %}<option value="{{ item.name }}">{{ item.name }}</option>{% endfor %}</select>
-            <button type="button" class="date-filter">▣ Hoy, {{ today_label }}</button>
-          </div>
-          <div class="class-grid" id="classGrid">
-            {% for item in classes %}
-            <article class="class-card" data-gym="{{ item.gym_id }}" data-activity="{{ item.name }}" data-class-id="{{ item.id }}">
-              <img src="{{ url_for('static', path='assets/classes/' + item.image) }}" alt="Clase de {{ item.name }}">
-              <div class="class-overlay"></div>
-              <div class="class-content">
-                <span class="class-icon {{ item.accent }}">{{ item.icon }}</span>
-                <h3>{{ item.name }}</h3>
-                <strong>{{ item.time }}</strong>
-                <small title="{{ item.gym_address }}">{{ item.gym }}</small>
-                <button class="spots enroll-trigger" type="button" data-class-id="{{ item.id }}" data-class-name="{{ item.name }}" data-class-time="{{ item.time }}" data-class-gym="{{ item.gym }}" data-class-address="{{ item.gym_address }}">
-                  <span data-spots-for="{{ item.id }}">{{ item.spots }}</span> plazas disponibles
-                </button>
-              </div>
+      <div class="hero-visual" aria-hidden="true">
+        <figure class="plate plate-a">
+          <video autoplay muted loop playsinline poster="{{ url_for('static', path='assets/video/banner_poster.png') }}">
+            <source src="{{ url_for('static', path='assets/video/banner_video_completo.mp4') }}" type="video/mp4">
+          </video>
+        </figure>
+        <figure class="plate plate-b">
+          <img src="{{ url_for('static', path='assets/classes/fuerza.jpg') }}" alt="">
+        </figure>
+        <figure class="plate plate-c">
+          <img src="{{ url_for('static', path='assets/classes/hiit.jpg') }}" alt="">
+        </figure>
+        <div class="stat-chip chip-1"><strong class="mono">{{ gyms|length }}</strong><span>Sedes en Madrid, Toledo y Torrejón</span></div>
+        <div class="stat-chip chip-2"><strong class="mono">{{ trainers|length }}</strong><span>Entrenadores certificados</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS STRIP -->
+  <div class="stats-strip" aria-hidden="true">
+    <div class="stats-track">
+      <span><b class="mono">{{ gyms|length }}</b> Sedes activas</span>
+      <span><b class="mono">{{ trainers|length }}</b> Entrenadores certificados</span>
+      <span><b class="mono">{{ classes|length }}</b> Clases disponibles</span>
+      <span><b class="mono">{{ today_label }}</b> Horario de hoy</span>
+      <span><b class="mono">{{ gyms|length }}</b> Sedes activas</span>
+      <span><b class="mono">{{ trainers|length }}</b> Entrenadores certificados</span>
+      <span><b class="mono">{{ classes|length }}</b> Clases disponibles</span>
+      <span><b class="mono">{{ today_label }}</b> Horario de hoy</span>
+    </div>
+  </div>
+
+  <!-- TU GIMNASIO / RESERVAS / INVITA -->
+  <section class="section" style="padding-bottom:0;">
+    <div class="wrap">
+      <div class="utility-grid reveal">
+        <div class="utility-card" id="gimnasios">
+          <h3>Tu gimnasio</h3>
+          <label class="sr-only" for="selectedGym">Selecciona gimnasio</label>
+          <select id="selectedGym" class="select-field">
+            {% for gym in gyms %}
+            <option value="{{ gym.id }}" data-address="{{ gym.address }}">{{ gym.name }}</option>
+            {% endfor %}
+          </select>
+          <p class="gym-address" id="selectedGymAddress">⌖ {{ gyms[0].address }}</p>
+          <button class="text-link" type="button" id="changeGym">Cambiar gimnasio</button>
+        </div>
+
+        <div class="utility-card" id="reservas">
+          <h3>Próximas reservas</h3>
+          <div class="reservation-list">
+            {% for item in upcoming %}
+            <article class="reservation-item">
+              <div class="reservation-date"><small>{{ item.month }}</small><strong>{{ item.day }}</strong></div>
+              <div><strong>{{ item.title }}</strong><span>{{ item.time }}</span><small>{{ item.gym }}</small></div>
+              <span class="chevron">›</span>
             </article>
+            {% else %}
+            <p class="empty-reservations">Todavía no tienes reservas.</p>
             {% endfor %}
           </div>
-          <div class="empty-state" id="emptyClasses" hidden>No hay clases con esos filtros.</div>
-        </section>
+        </div>
 
-        <section class="section-card booking-section" id="dietistas">
-          <div class="section-heading">
-            <div><span class="heading-icon">♧</span><h2>Reserva con especialistas</h2></div>
+        <div class="utility-card invite-utility">
+          <h3>Invita a un amigo</h3>
+          <p>Entrenad juntos y conseguid descuentos exclusivos.</p>
+          <button class="btn btn-dark btn-sm" type="button" id="inviteButton">Invitar ahora</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">La diferencia</span>
+          <h2 style="margin-top:14px;">Entrenamos con criterio, no con moda.</h2>
+        </div>
+        <p>Cuatro decisiones que no hemos dejado de defender desde el primer día.</p>
+      </div>
+
+      <div class="feature-grid reveal">
+        <article class="feature-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-1.5z"/></svg>
+          <h3>Entrenadores certificados</h3>
+          <p>Cada profesional certificado diseña tu progresión, sesión a sesión, no solo la cuenta.</p>
+        </article>
+        <article class="feature-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h2M18 12h2M6 8v8M18 8v8M8 12h8"/></svg>
+          <h3>Equipamiento renovado</h3>
+          <p>Sala de fuerza y zona funcional puestas a punto cada año, sin excusas de "está roto".</p>
+        </article>
+        <article class="feature-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+          <h3>Acceso 24 horas</h3>
+          <p>La sala nunca cierra. Entrena a las 6 de la mañana o a medianoche, tú decides.</p>
+        </article>
+        <article class="feature-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-4-3-8-6.5-8-11a5 5 0 019-3 5 5 0 019 3c0 4.5-4 8-10 11z"/></svg>
+          <h3>Seguimiento cercano</h3>
+          <p>Entrenadores que responden por chat el mismo día, sin intermediarios.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLASES -->
+  <section class="section" id="clases">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Horario</span>
+          <h2 style="margin-top:14px;">Inscríbete a clases esta semana.</h2>
+        </div>
+        <p>Filtra por gimnasio o actividad: todas las clases admiten reserva el mismo día.</p>
+      </div>
+
+      <div class="class-filters reveal" aria-label="Filtros de clases">
+        <select id="gymFilter">
+          <option value="all">Todos los gimnasios</option>
+          {% for gym in gyms %}<option value="{{ gym.id }}">{{ gym.name }}</option>{% endfor %}
+        </select>
+        <select id="activityFilter">
+          <option value="all">Todas las actividades</option>
+          {% for item in classes %}<option value="{{ item.name }}">{{ item.name }}</option>{% endfor %}
+        </select>
+        <button type="button" class="date-filter-btn">Hoy, {{ today_label }}</button>
+      </div>
+
+      <div class="class-grid reveal" id="classGrid">
+        {% for item in classes %}
+        <article class="class-card{% if loop.first %} --wide{% endif %}" data-gym="{{ item.gym_id }}" data-activity="{{ item.name }}" data-class-id="{{ item.id }}">
+          <img src="{{ url_for('static', path='assets/classes/' + item.image) }}" alt="Clase de {{ item.name }}">
+          <div class="class-body">
+            <h3>{{ item.name }}</h3>
+            <div class="class-meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+              <span class="mono">{{ item.time }}</span>
+              <span title="{{ item.gym_address }}">· {{ item.gym }}</span>
+            </div>
+            <button class="spots-pill enroll-trigger" type="button" data-class-id="{{ item.id }}" data-class-name="{{ item.name }}" data-class-time="{{ item.time }}" data-class-gym="{{ item.gym }}" data-class-address="{{ item.gym_address }}">
+              <i></i><span data-spots-for="{{ item.id }}">{{ item.spots }}</span> plazas disponibles
+            </button>
           </div>
-          <article class="service-card personal-card">
-            <div>
-              <span class="service-kicker">Entrenamiento personal</span>
-              <p>Alcanza tus objetivos con entrenadores certificados.</p>
-            </div>
-            <div class="mini-avatars">
-              {% for trainer in trainers[:3] %}<img src="{{ url_for('static', path='assets/trainers/' + trainer.image) }}" alt="{{ trainer.name }}">{% endfor %}<span>+12</span>
-            </div>
-            <button class="button button-primary full" type="button" data-open-appointment="personal">▣ Reservar sesión</button>
-          </article>
-          <article class="service-card diet-card">
-            <div>
-              <span class="service-kicker green">Consulta con dietistas</span>
-              <p>Planes nutricionales personalizados para ti.</p>
-            </div>
-            <div class="mini-avatars">
-              <img src="{{ url_for('static', path='assets/trainers/andrea.jpg') }}" alt="Andrea Salazar"><span>+8</span>
-            </div>
-            <button class="button button-green full" type="button" data-open-appointment="diet">▣ Reservar consulta</button>
-          </article>
-        </section>
+        </article>
+        {% endfor %}
+      </div>
+      <div class="empty-state" id="emptyClasses" hidden>No hay clases con esos filtros.</div>
+    </div>
+  </section>
+
+  <!-- ENTRENADORES -->
+  <section class="section" id="entrenadores">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">El equipo</span>
+          <h2 style="margin-top:14px;">Habla con nuestros entrenadores.</h2>
+        </div>
+        <p>Haz clic en la tarjeta de un profesional para iniciar una conversación.</p>
       </div>
 
-      <section class="section-card trainers-section" id="entrenadores">
-        <div class="trainers-title">
-          <span class="chat-symbol">◌</span>
-          <div><h2>Habla con nuestros entrenadores</h2><p>Haz clic en la foto de un profesional para iniciar una conversación.</p></div>
-        </div>
-        <div class="trainer-grid">
-          {% for trainer in trainers %}
-          <article class="trainer-card" role="button" tabindex="0"
-                  data-trainer-id="{{ trainer.id }}"
-                  data-trainer-name="{{ trainer.name }}"
-                  data-trainer-role="{{ trainer.role }}"
-                  data-trainer-specialty="{{ trainer.specialty }}"
-                  data-trainer-image="{{ url_for('static', path='assets/trainers/' + trainer.image) }}"
-                  data-trainer-greeting="{{ trainer.greeting }}">
-            <span class="online-dot" aria-label="Disponible"></span>
-            <span class="trainer-video">
-              <video controls loop playsinline aria-label="Vídeo de {{ trainer.name }}">
-                <source src="{{ url_for('static', path='assets/video/' + trainer.video) }}" type="video/mp4">
-              </video>
-            </span>
+      <div class="trainer-grid reveal">
+        {% for trainer in trainers %}
+        <article class="trainer-card" role="button" tabindex="0"
+                data-trainer-id="{{ trainer.id }}"
+                data-trainer-name="{{ trainer.name }}"
+                data-trainer-role="{{ trainer.role }}"
+                data-trainer-specialty="{{ trainer.specialty }}"
+                data-trainer-image="{{ url_for('static', path='assets/trainers/' + trainer.image) }}"
+                data-trainer-greeting="{{ trainer.greeting }}">
+          <div class="trainer-photo">
+            <video controls loop playsinline aria-label="Vídeo de {{ trainer.name }}">
+              <source src="{{ url_for('static', path='assets/video/' + trainer.video) }}" type="video/mp4">
+            </video>
+            <span class="trainer-tag"><i></i>{{ trainer.status }}</span>
+          </div>
+          <div class="trainer-info">
             <strong>{{ trainer.name }}</strong>
-            <span>{{ trainer.specialty }}</span>
-          </article>
-          {% endfor %}
-        </div>
-      </section>
-
-      <section class="account-placeholder section-card" id="cuenta">
-        <div><span class="heading-icon">◎</span><h2>Mi cuenta</h2></div>
-        <p>Área demostrativa para el plan, pagos, preferencias y datos personales.</p>
-      </section>
-    </div>
-  </main>
-
-  <aside class="chat-widget" id="chatWidget" aria-live="polite" hidden>
-    <header class="chat-header">
-      <img id="chatAvatar" alt="Avatar del profesional">
-      <div><strong id="chatName"></strong><span id="chatRole"></span></div>
-      <span class="chat-online"></span>
-      <button type="button" class="icon-button" id="minimizeChat" aria-label="Minimizar chat">−</button>
-      <button type="button" class="icon-button" id="closeChat" aria-label="Cerrar chat">×</button>
-    </header>
-    <div class="chat-messages" id="chatMessages"></div>
-    <div class="quick-replies" id="quickReplies">
-      <button type="button">Quiero mejorar mi forma</button>
-      <button type="button">Consultar horarios</button>
-      <button type="button">Reservar una sesión</button>
-    </div>
-    <form class="chat-form" id="chatForm">
-      <input id="chatInput" type="text" maxlength="600" placeholder="Escribe tu mensaje..." autocomplete="off" required>
-      <button type="submit" aria-label="Enviar mensaje">➤</button>
-    </form>
-  </aside>
-
-  <dialog class="modal" id="enrollModal">
-    <form method="dialog" class="modal-card" id="enrollForm">
-      <button class="modal-close" type="button" data-close-modal="enrollModal">×</button>
-      <span class="eyebrow">Inscripción a clase</span>
-      <h2 id="enrollTitle">Reserva tu plaza</h2>
-      <p id="enrollMeta" class="modal-meta"></p>
-      <input type="hidden" id="enrollClassId">
-      <label>Nombre completo<input id="enrollName" type="text" minlength="2" maxlength="80" placeholder="Tu nombre" required></label>
-      <label>Correo electrónico<input id="enrollEmail" type="email" placeholder="tu@email.com" required></label>
-      <button class="button button-primary full" type="submit">Confirmar inscripción</button>
-      <p class="form-status" id="enrollStatus"></p>
-    </form>
-  </dialog>
-
-  <dialog class="modal" id="appointmentModal">
-    <form method="dialog" class="modal-card" id="appointmentForm">
-      <button class="modal-close" type="button" data-close-modal="appointmentModal">×</button>
-      <span class="eyebrow">Nueva reserva</span>
-      <h2 id="appointmentTitle">Reservar sesión</h2>
-      <label>Profesional
-        <select id="professionalId" required>
-          {% for trainer in trainers %}<option value="{{ trainer.id }}" data-role="{{ trainer.role }}">{{ trainer.name }} · {{ trainer.specialty }}</option>{% endfor %}
-        </select>
-      </label>
-      <label>Gimnasio
-        <select id="appointmentGym" required>
-          {% for gym in gyms %}<option value="{{ gym.id }}">{{ gym.name }} · {{ gym.address }}</option>{% endfor %}
-        </select>
-      </label>
-      <label>Nombre completo<input id="appointmentName" type="text" minlength="2" maxlength="120" placeholder="Tu nombre" required></label>
-      <label>Correo electrónico<input id="appointmentEmail" type="email" placeholder="tu@email.com" required></label>
-      <div class="form-row">
-        <label>Fecha<input id="appointmentDate" type="date" required></label>
-        <label>Hora<select id="appointmentTime"><option>09:00</option><option>11:30</option><option>16:00</option><option>18:30</option></select></label>
+            <span>{{ trainer.role }} · {{ trainer.specialty }}</span>
+            <button class="btn btn-ghost btn-sm btn-block" type="button">Hablar con {{ trainer.name.split(' ')[0] }}</button>
+          </div>
+        </article>
+        {% endfor %}
       </div>
-      <button class="button button-primary full" type="submit">Confirmar reserva</button>
-      <p class="form-status" id="appointmentStatus"></p>
-    </form>
-  </dialog>
+    </div>
+  </section>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="{{ url_for('static', path='js/app.js') }}" defer></script>
+  <!-- UBICACIÓN -->
+  <section class="section">
+    <div class="wrap">
+      <div class="location-grid reveal">
+        <div class="location-photo">
+          <img src="{{ url_for('static', path='assets/building/building.jpeg') }}" alt="Fachada de un centro Ponte Cachas al atardecer">
+          <div class="stat-chip chip-1"><strong class="mono">{{ gyms|length }}</strong><span>Sedes activas</span></div>
+        </div>
+        <div>
+          <span class="eyebrow">Visítanos</span>
+          <h2 style="margin-top:14px;">Así es entrenar en Ponte Cachas.</h2>
+          <p style="margin-top:18px;max-width:42ch;color:var(--muted);font-size:1rem;line-height:1.65;">Instalaciones abiertas, luminosas y equipadas — con sedes en Madrid, Toledo y Torrejón.</p>
+          <div class="location-list">
+            {% for gym in gyms %}
+            <div class="location-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              <div><strong>{{ gym.name }}</strong><span>{{ gym.address }}, {{ gym.city }}</span></div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALERÍA -->
+  <section class="section" style="padding-top:0;">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Las instalaciones</span>
+          <h2 style="margin-top:14px;">Un recorrido por el centro.</h2>
+        </div>
+        <p>Recepción, salas de entrenamiento, piscina y vestuarios — así son nuestras sedes por dentro.</p>
+      </div>
+
+      {% set gallery_photos = [
+        ("recepcion-entrada.jpg", "Recepción y entrada"),
+        ("zona-cardio.jpg", "Zona de cardio principal"),
+        ("peso-libre-fuerza.jpg", "Peso libre y fuerza"),
+        ("maquinas-resistencia.jpg", "Máquinas de resistencia"),
+        ("piscina.jpg", "Piscina y zona acuática"),
+        ("pilates-yoga.jpg", "Estudio de pilates y yoga"),
+        ("funcional.jpg", "Entrenamiento funcional"),
+        ("boxeo.jpg", "Boxeo y artes marciales"),
+        ("vestuarios.jpg", "Vestuarios y lounge"),
+        ("fachada.jpg", "Fachada exterior"),
+      ] %}
+      <div class="gallery-grid reveal">
+        {% for file, caption in gallery_photos %}
+        <figure class="gallery-item{% if loop.index in (1, 6) %} --wide{% endif %}">
+          <img src="{{ url_for('static', path='assets/building/gallery/web/' + file) }}" alt="{{ caption }} en Ponte Cachas" loading="lazy">
+          <figcaption class="gallery-caption">{{ caption }}</figcaption>
+        </figure>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section" id="planes">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Membresías</span>
+          <h2 style="margin-top:14px;">Un plan para cada nivel de compromiso.</h2>
+        </div>
+        <p>Sin permanencia. Cambia o cancela tu plan cuando quieras.</p>
+      </div>
+
+      <div class="pricing-grid reveal">
+        <article class="price-card">
+          <span class="price-name">Básico</span>
+          <div class="price-amount"><strong class="mono">29€</strong><span>/ mes</span></div>
+          <p class="price-desc">Para quien empieza y quiere probar sin comprometerse.</p>
+          <ul class="price-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Acceso a sala de fuerza</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>2 clases en grupo / semana</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>App de reservas</li>
+          </ul>
+          <button class="btn btn-ghost btn-block" type="button" data-open-appointment="personal">Elegir Básico</button>
+        </article>
+
+        <article class="price-card --featured">
+          <span class="price-badge">Más elegido</span>
+          <span class="price-name">Pro</span>
+          <div class="price-amount"><strong class="mono">49€</strong><span>/ mes</span></div>
+          <p class="price-desc">Acceso ilimitado y una sesión personal cada mes.</p>
+          <ul class="price-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Acceso 24h ilimitado</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Todas las clases en grupo</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>1 sesión personal al mes</li>
+          </ul>
+          <button class="btn btn-primary btn-block" type="button" data-open-appointment="personal">Elegir Pro</button>
+        </article>
+
+        <article class="price-card">
+          <span class="price-name">Elite</span>
+          <div class="price-amount"><strong class="mono">89€</strong><span>/ mes</span></div>
+          <p class="price-desc">Para quien quiere resultados y no negocia el tiempo.</p>
+          <ul class="price-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Todo lo incluido en Pro</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>4 sesiones personales al mes</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Acceso a todas las sedes</li>
+          </ul>
+          <button class="btn btn-ghost btn-block" type="button" data-open-appointment="personal">Elegir Elite</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIOS -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Socios</span>
+          <h2 style="margin-top:14px;">No lo decimos nosotros.</h2>
+        </div>
+      </div>
+      <div class="quote-row reveal">
+        <article class="quote-card">
+          <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+          <p>Llevo ocho meses y es la primera vez que no abandono un gimnasio en enero.</p>
+          <div class="quote-who"><span class="quote-avatar">MG</span><div><strong>Marta G.</strong><span>Socia Pro</span></div></div>
+        </article>
+        <article class="quote-card">
+          <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+          <p>Los entrenadores corrigen de verdad la técnica, no solo cuentan repeticiones.</p>
+          <div class="quote-who"><span class="quote-avatar">RA</span><div><strong>Rubén A.</strong><span>Socio Elite</span></div></div>
+        </article>
+        <article class="quote-card">
+          <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+          <p>Reservar una clase o hablar con un entrenador me lleva menos de un minuto.</p>
+          <div class="quote-who"><span class="quote-avatar">LM</span><div><strong>Laura M.</strong><span>Socia Pro</span></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CUENTA -->
+  <section class="section" style="padding-top:0;" id="cuenta">
+    <div class="wrap">
+      <div class="account-card reveal">
+        <div>
+          <span class="eyebrow neutral">Tu cuenta</span>
+          <h3 style="margin-top:10px;">Mi cuenta</h3>
+          <p>Área demostrativa para el plan, pagos, preferencias y datos personales.</p>
+        </div>
+        <a class="btn btn-ghost btn-sm" href="#planes">Ver mi plan</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="section" style="padding-top:0;">
+    <div class="wrap">
+      <div class="cta-band reveal">
+        <div class="cta-inner">
+          <h2>¿Empezamos?</h2>
+          <div class="cta-copy">
+            <p>Tu primera clase es gratis. Sin permanencia, sin letra pequeña.</p>
+            <div class="cta-actions" style="margin-top:24px;">
+              <a class="btn btn-dark" href="#clases">Reservar clase gratuita</a>
+              <a class="btn btn-ghost" style="border-color:rgba(26,18,0,.35);color:var(--brand-ink);" href="#planes">Ver planes</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand-mark" href="#inicio" aria-label="Ponte Cachas, inicio">
+          <img src="{{ url_for('static', path='assets/ponte-cachas-logo.svg') }}" alt="Ponte Cachas">
+        </a>
+        <p>Estudio de entrenamiento con clases en grupo, entrenamiento personal y varias sedes en Madrid, Toledo y Torrejón.</p>
+        <div class="social-row">
+          <a href="#" aria-label="Instagram">IG</a>
+          <a href="#" aria-label="TikTok">TT</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Enlaces</h4>
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#clases">Clases</a></li>
+          <li><a href="#entrenadores">Entrenadores</a></li>
+          <li><a href="#planes">Planes</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Clases</h4>
+        <ul>
+          {% for item in classes %}<li><a href="#clases">{{ item.name }}</a></li>{% endfor %}
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Centros</h4>
+        <address>
+          {% for gym in gyms %}{{ gym.name }} · {{ gym.city }}<br>{% endfor %}
+        </address>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Ponte Cachas. Portal demo.</span>
+      <ul>
+        <li><a href="#">Aviso legal</a></li>
+        <li><a href="#">Privacidad</a></li>
+        <li><a href="#">Cookies</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<aside class="chat-widget" id="chatWidget" aria-live="polite" hidden>
+  <header class="chat-header">
+    <img id="chatAvatar" alt="Avatar del profesional">
+    <div><strong id="chatName"></strong><span id="chatRole"></span></div>
+    <span class="chat-online"></span>
+    <button type="button" class="icon-button" id="minimizeChat" aria-label="Minimizar chat">−</button>
+    <button type="button" class="icon-button" id="closeChat" aria-label="Cerrar chat">×</button>
+  </header>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="quick-replies" id="quickReplies">
+    <button type="button">Quiero mejorar mi forma</button>
+    <button type="button">Consultar horarios</button>
+    <button type="button">Reservar una sesión</button>
+  </div>
+  <form class="chat-form" id="chatForm">
+    <input id="chatInput" type="text" maxlength="600" placeholder="Escribe tu mensaje..." autocomplete="off" required>
+    <button type="submit" aria-label="Enviar mensaje">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </form>
+</aside>
+
+<dialog class="modal" id="enrollModal">
+  <form method="dialog" class="modal-card" id="enrollForm">
+    <button class="modal-close" type="button" data-close-modal="enrollModal">×</button>
+    <span class="eyebrow">Inscripción a clase</span>
+    <h2 id="enrollTitle">Reserva tu plaza</h2>
+    <p id="enrollMeta" class="modal-meta"></p>
+    <input type="hidden" id="enrollClassId">
+    <label>Nombre completo<input id="enrollName" type="text" minlength="2" maxlength="80" placeholder="Tu nombre" required></label>
+    <label>Correo electrónico<input id="enrollEmail" type="email" placeholder="tu@email.com" required></label>
+    <button class="btn btn-primary btn-block" type="submit">Confirmar inscripción</button>
+    <p class="form-status" id="enrollStatus"></p>
+  </form>
+</dialog>
+
+<dialog class="modal" id="appointmentModal">
+  <form method="dialog" class="modal-card" id="appointmentForm">
+    <button class="modal-close" type="button" data-close-modal="appointmentModal">×</button>
+    <span class="eyebrow">Nueva reserva</span>
+    <h2 id="appointmentTitle">Reservar sesión</h2>
+    <label>Profesional
+      <select id="professionalId" required>
+        {% for trainer in trainers %}<option value="{{ trainer.id }}" data-role="{{ trainer.role }}">{{ trainer.name }} · {{ trainer.specialty }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Gimnasio
+      <select id="appointmentGym" required>
+        {% for gym in gyms %}<option value="{{ gym.id }}">{{ gym.name }} · {{ gym.address }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Nombre completo<input id="appointmentName" type="text" minlength="2" maxlength="120" placeholder="Tu nombre" required></label>
+    <label>Correo electrónico<input id="appointmentEmail" type="email" placeholder="tu@email.com" required></label>
+    <div class="form-row">
+      <label>Fecha<input id="appointmentDate" type="date" required></label>
+      <label>Hora<select id="appointmentTime"><option>09:00</option><option>11:30</option><option>16:00</option><option>18:30</option></select></label>
+    </div>
+    <button class="btn btn-primary btn-block" type="submit">Confirmar reserva</button>
+    <p class="form-status" id="appointmentStatus"></p>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="{{ url_for('static', path='js/app.js') }}" defer></script>
+<script>
+(function(){
+  var nav = document.getElementById('siteNav');
+  var onScroll = function(){
+    if(window.scrollY > 12){ nav.classList.add('scrolled'); }
+    else{ nav.classList.remove('scrolled'); }
+  };
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var targets = document.querySelectorAll('.reveal');
+  if(reduceMotion || !('IntersectionObserver' in window)){
+    targets.forEach(function(el){ el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, {threshold:0.12, rootMargin:'0px 0px -60px 0px'});
+  targets.forEach(function(el){ io.observe(el); });
+})();
+</script>
 </body>
 </html>
