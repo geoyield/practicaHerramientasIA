@@ -22,3 +22,7 @@ dev = [
 
 [tool.uv]
 default-index = "https://pypi.org/simple"
+
+[mcp_servers.render]
+url = "https://mcp.render.com/mcp"
+http_headers = { Authorization = "Bearer rnd_bvTUYIl1XROxEtJkIlvpJT8A690d" }

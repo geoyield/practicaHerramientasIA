@@ -18,4 +18,6 @@ COPY . .
 RUN python -m scripts.check_dependencies
 
 EXPOSE 8000
-CMD ["sh", "-c", "python -m scripts.init_db && python -m scripts.seed_db && exec uvicorn app:app --host 0.0.0.0 --port 8000"]
+# en render fallaba el deployment por 'connection to server at "127.0.0.1", port 5432 failed: Connection refused'. A sugenrencia de codex, de implementa esto. Previamente se había probado a comunicar via una network tipo bridge los dos containers, pero no soluiciona el problema
+CMD ["sh", "-c", "python -m scripts.init_db && python -m scripts.seed_db && exec uvicorn app:app --host 0.0.0.0 --port ${PORT:-8000}"]
+
